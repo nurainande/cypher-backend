@@ -55,7 +55,7 @@ const paymentController = async(request,response)=>{
             message : error?.message || error,
             error : true,
             success : false,
-            why:'paymentControlerError why'
+            why:'paymentControlerErrorWhy'
         })
     }
 }
