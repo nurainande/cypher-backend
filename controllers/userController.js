@@ -95,17 +95,35 @@ exports.userSignInController = async (req, res) => {
             const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: 60 * 60 * 2 });
             console.log('token', token)
 
-            const tokenOption = {
-                httpOnly: true,
-                secure: true
-            }
+            // ======Initial one======
 
-            res.cookie("token", token, tokenOption).status(200).json({
+            // const tokenOption = {
+            //     httpOnly: true,
+            //     secure: true
+            // }
+
+            // res.cookie("token", token, tokenOption).status(200).json({
+            //     message: "Login successfully",
+            //     data: token,
+            //     success: true,
+            //     error: false
+            // })
+
+            // ======ends here======
+
+            res.cookie("token", token, {
+                httpOnly: true, // Prevents XSS attacks
+                secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+                sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // Allow cross-site cookies
+                maxAge: 3600000, // 1 hour expiry
+            });
+
+            res.status(200).json({
                 message: "Login successfully",
                 data: token,
                 success: true,
                 error: false
-            })
+            });
 
         } else {
             throw new Error("Please check Password")
