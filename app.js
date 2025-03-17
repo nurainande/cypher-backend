@@ -96,8 +96,10 @@ app.get('/api/checkout-success', async (req, res) => {
     }
 });
 
-
-app.get('/webhook',webhooks)
+app.get('/web', (req,res)=>{
+    res.send('Hello')
+})
+app.post('/webhook',webhooks)
 
 app.use('/api/v1/user', userRouter )
 app.use('/api/v1/product', productRouter)
