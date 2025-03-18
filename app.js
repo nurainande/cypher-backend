@@ -66,39 +66,38 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
 
 
-// Endpoint to handle successful payment
-app.get('/api/checkout-success', async (req, res) => {
-    const sessionId = req.query.session_id;
+// // ==============Endpoint to handle successful payment============
 
-    try {
-        const session = await stripe.checkout.sessions.retrieve(sessionId);
-        const userId = session.metadata.userId;
+// app.get('/api/checkout-success', async (req, res) => {
+//     const sessionId = req.query.session_id;
 
-        const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
-        const items = lineItems.data.map(item => ({
-            productId: item.price.product,
-            quantity: item.quantity,
-            price: item.amount_total / 100,
-        }));
+//     try {
+//         const session = await stripe.checkout.sessions.retrieve(sessionId);
+//         const userId = session.metadata.userId;
 
-        const newOrder = new Order({
-            userId,
-            items,
-            totalAmount: session.amount_total / 100,
-            paymentStatus: 'Paid',
-            paymentId: session.id,
-        });
+//         const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
+//         const items = lineItems.data.map(item => ({
+//             productId: item.price.product,
+//             quantity: item.quantity,
+//             price: item.amount_total / 100,
+//         }));
 
-        await newOrder.save();
-        res.status(200).json(newOrder);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+//         const newOrder = new Order({
+//             userId,
+//             items,
+//             totalAmount: session.amount_total / 100,
+//             paymentStatus: 'Paid',
+//             paymentId: session.id,
+//         });
 
-app.get('/web', (req,res)=>{
-    res.send('Hello')
-})
+//         await newOrder.save();
+//         res.status(200).json(newOrder);
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// });
+
+
 app.post('/webhook',webhooks)
 
 app.use('/api/v1/user', userRouter )

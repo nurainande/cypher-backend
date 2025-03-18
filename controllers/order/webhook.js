@@ -1,14 +1,12 @@
 const stripe = require('../../config/stripe')
 const orderModel = require('../../models/orderModel')
-// const addToCartModel = require('../../models/cartProduct')
 
 const endpointSecret = "whsec_43d6edd4dbb746b544077881b3b2c2e566143b954d35a2ce0ad35ce534ac2f3a"
 
 // const endpointSecret = process.env.STRIPE_ENPOINT_WEBHOOK_SECRET_KEY
 
-// loves - happy - liked - amity
 
-// =========getLineItem=========
+// ==========getLineItem==========
 async function getLIneItems(lineItems){
     let ProductItems = []
 
@@ -17,13 +15,7 @@ async function getLIneItems(lineItems){
             const product = await stripe.products.retrieve(item.price.product)
             const productId = product.metadata.productId
 
-            // const productData = {
-            //     productId : productId,
-            //     name : product.name,
-            //     price : item.price.unit_amount / 100,
-            //     quantity : item.quantity,
-            //     image : product.images
-            // }
+            
             const productData = {
                 productId: productId,
                 name: product.name,
@@ -37,6 +29,7 @@ async function getLIneItems(lineItems){
 
     return ProductItems
 }
+
 // ====================webhooks============
 const webhooks = async(request,response) => {
     const sig = request.headers['stripe-signature'];
